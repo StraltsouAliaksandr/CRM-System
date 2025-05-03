@@ -1,0 +1,154 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 20px;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  padding: 10px;
+  background-color: rgb(241,244,249);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wrapper {
+  width: 800px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.todo-form {
+  display: flex;
+  gap: 10px;
+}
+
+.todo-input {
+  width: 79%;
+  padding: 12px 5px;
+  background: none;
+  border:none;
+  border-bottom: 2px solid gray;
+  font-size: 20px;
+}
+
+.todo-input:focus {
+  outline: none;
+}
+
+.add-button {
+  width: 20%;
+  padding: 13px;
+  height: 100%;
+  cursor: pointer;
+  background-color: rgb(83,147,255);
+  color: white;
+  border-radius: 10px;
+  border:none;
+  font-size: 1.2rem;
+}
+
+.todo-item {
+  margin-bottom: 10px;
+  padding: 0 15px;
+  background-color: white;
+  border-radius: 5px;
+  align-items: center;
+  display: flex;
+}
+
+.todo-item .todo-text {
+  padding: 15px;
+  padding-right: 0;
+  flex-grow: 1;
+}
+
+.delete-button {
+border:none;
+background-color: rgb(254,103,85); 
+cursor: pointer;
+border-radius: 5px;
+padding: 10px;
+}
+
+
+.edit-button {
+border:none;
+background-color: rgb(83,147,255);
+cursor: pointer;
+border-radius: 5px;
+padding: 10px;
+}
+
+.todo-buttons {
+  display:flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.custom-checkbox {
+  border: 1px solid gray;
+  border-radius: 50%;
+  min-height: 15px;
+  min-width: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  transition: 200ms;
+}
+
+input[type="checkbox"]:checked ~ .custom-checkbox {
+  background-color: rgb(83,147,255);
+}
+
+input[type="checkbox"]:checked ~ .custom-checkbox svg{
+  fill: white;
+}
+
+input[type="checkbox"]:checked ~ .todo-text {
+  text-decoration: line-through;
+  color: gray;
+}
+
+input[type="checkbox"] {
+  display: none;
+}
+
+.error-message {
+  color: red;
+  font-size: 1.2rem;
+  font-weight: 300;
+  display: block;
+}
+
+.todo-filters {
+  display: flex;
+  justify-content: space-between;
+}
+
+.todo-filters button {
+  border: none;
+  background-color: transparent;
+  padding: 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-right: 20px;
+  font-size: 1.2rem;
+  color: gray;
+
+}
+
+.todo-filters button.active {
+  color: rgb(83,147,255);
+  font-weight: bold;
+  text-decoration: underline;
+}
