@@ -1,21 +1,15 @@
-import TodoItem from './TodoItem.jsx';
+import React from 'react';
+import TodoItem from './TodoItem';
 
-function TodoList({ items, onToggle, onDelete, onEditToggle, onTextChange }) {
+export default function TodoList({ todos = [], refresh, toggle }) {
+  if (todos.length === 0) {
+    return <p>Нет задач (todos.length = {todos.length})</p>;
+  }
   return (
     <ul className="todo-list">
-      {items.map(({ todo, idx }) => (
-        <TodoItem
-          key={idx}
-          index={idx}
-          todo={todo}
-          onToggle={onToggle}
-          onDelete={onDelete}
-          onEditToggle={onEditToggle}
-          onTextChange={onTextChange}
-        />
+      {todos.map((todo) => (
+        <TodoItem key={todo.id} todo={todo} toggle={toggle} refresh={refresh} />
       ))}
     </ul>
   );
 }
-
-export default TodoList;
