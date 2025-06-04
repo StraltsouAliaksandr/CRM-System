@@ -32,7 +32,7 @@ export default function TodoListPage() {
 
     setTodos(ts => ts.map(t => (t.id === id ? { ...t, isDone: newIsDone } : t)));
     await api.updateTodo(id, { isDone: newIsDone });
-    setFilter('completed');
+    await refresh();
   };
 
   return (
