@@ -30,13 +30,12 @@ export default function TodoItem({ todo, toggle, refresh }) {
   };
 
   const handleToggle = () => {
-    // переключаем и едем в «Сделано»
+
     toggle(todo.id, !todo.isDone);
   };
 
   return (
     <li className="todo-item">
-      {/* чекбокс оставляем, если нужен */}
       <input
         type="checkbox"
         checked={todo.isDone}
@@ -57,8 +56,8 @@ export default function TodoItem({ todo, toggle, refresh }) {
       ) : (
         <span
           className={`todo-text${todo.isDone ? ' completed' : ''}`}
-          onClick={handleToggle}               // <-- здесь
-          style={{ cursor: 'pointer' }}        // <-- здесь
+          onClick={handleToggle}       
+          style={{ cursor: 'pointer' }}       
         >
           {todo.title}
         </span>
