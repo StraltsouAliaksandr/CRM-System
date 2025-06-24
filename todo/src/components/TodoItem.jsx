@@ -37,12 +37,17 @@ export default function TodoItem({ todo, toggle, refresh }) {
   return (
     <li className="todo-item">
       <input
-        type="checkbox"
-        checked={todo.isDone}
-        onChange={handleToggle}
-        className="todo-checkbox"
-      />
-      <label className="custom-checkbox" />
+    id={`todo-${todo.id}`}
+    type="checkbox"
+    checked={todo.isDone}
+    onChange={handleToggle}
+    className="todo-checkbox"
+  />
+
+  <label
+   htmlFor={`todo-${todo.id}`}
+   className="custom-checkbox"
+  />
 
       {editing ? (
         <>
