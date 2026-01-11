@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import * as api from '../api/todos.js';
-import TodoForm    from '../components/TodoForm.jsx';
-import TodoFilters from '../components/TodoFilters.jsx';
-import TodoList    from '../components/TodoList.jsx';
+import { getAllToDos, updateTodo } from '../api/todos.js';
+import TodoForm    from '../components/TodoForm/TodoForm.jsx';
+import TodoFilters from '../components/TodoFilters/TodoFilters.jsx';
+import TodoList    from '../components/TodoList/TodoList.jsx';
+import styles from './TodoListPage.module.css';
 
 export default function TodoListPage() {
   const [todos,  setTodos]  = useState([]);
@@ -10,37 +11,34 @@ export default function TodoListPage() {
   const [filter,setFilter] = useState('all');
 
 
-  const refresh = async () => {
+  const loadTodos = async () => {
     try {
-      console.log('refresh, status =', filter);
-      const { data, info } = await api.getAll(filter);
+      console.log('loadTodos, status =', filter);
+      const { data, info } = await getAllToDos(filter);
       setTodos(data);
       setCounts(info);
     } catch (err) {
-      console.error(err);
+      alert('Не удалось загрузить список задач.');
     }
   };
 
 
   useEffect(() => {
-    refresh();
+    loadTodos();
   }, [filter]);
 
 
   const handleToggle = async (id, newDone) => {
-  
-    setTodos(ts => ts.map(t => t.id === id ? { ...t, isDone: newDone } : t));
+    await updateTodo(id, { isDone: newDone });
 
-    await api.updateTodo(id, { isDone: newDone });
-
-    await refresh();
+    await loadTodos();
   };
 
   return (
-    <div className="wrapper">
-      <TodoForm    refresh={refresh} />
+    <div className={styles.wrapper}>
+      <TodoForm    loadTodos={loadTodos} />
       <TodoFilters filter={filter} setFilter={setFilter} counts={counts} />
-      <TodoList    todos={todos} toggle={handleToggle} refresh={refresh} />
+      <TodoList    todos={todos} toggle={handleToggle} loadTodos={loadTodos} />
     </div>
   );
 }

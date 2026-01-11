@@ -11,36 +11,40 @@ async function request(path, options = {}) {
   return res.json();
 }
 
-
-export async function getAll(filter = 'all') {
-
-  const resp = await request(`/todos?filter=${filter}`);
- return {
-    data: resp.data || [],
-    info: {
-      all:       resp.info?.all       ?? resp.meta?.totalAmount ?? resp.data.length,
-      inWork:    resp.info?.inWork    ?? resp.data.filter(t => !t.isDone).length,
-      completed: resp.info?.completed ?? resp.data.filter(t => t.isDone).length,
-    },
+function buildInfo(resp, data) {
+  return {
+    all:       resp.info?.all       ?? resp.meta?.totalAmount ?? data.length,
+    inWork:    resp.info?.inWork    ?? data.filter(t => !t.isDone).length,
+    completed: resp.info?.completed ?? data.filter(t => t.isDone).length,
   };
 }
 
-export function addTodo(body) {
+export async function getAllToDos(filter = 'all') {
+
+  const resp = await request(`/todos?filter=${filter}`);
+  const data = resp.data || [];
+  return {
+    data,
+    info: buildInfo(resp, data),
+  };
+}
+
+export function addTodo(todoData) {
   return request('/todos', {
     method: 'POST',
-    body:   JSON.stringify(body),
+    body:   JSON.stringify(todoData),
   });
 }
 
-export function updateTodo(id, body) {
-  return request(`/todos/${id}`, {
+export function updateTodo(todoId, updates) {
+  return request(`/todos/${todoId}`, {
     method: 'PUT',
-    body:   JSON.stringify(body),
+    body:   JSON.stringify(updates),
   });
 }
 
-export function deleteTodo(id) {
-  return request(`/todos/${id}`, {
+export function deleteTodo(todoId) {
+  return request(`/todos/${todoId}`, {
     method: 'DELETE',
   });
 }
