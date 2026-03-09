@@ -1,7 +1,14 @@
-import React from 'react';
+﻿import { Dispatch, SetStateAction } from 'react';
 import styles from './TodoFilters.module.css';
+import { Filter, TodoCounts } from '../../types/todo';
 
-export default function TodoFilters({ filter, setFilter, counts }) {
+interface TodoFiltersProps {
+  filter: Filter;
+  setFilter: Dispatch<SetStateAction<Filter>>;
+  counts: TodoCounts;
+}
+
+export default function TodoFilters({ filter, setFilter, counts }: TodoFiltersProps) {
   return (
     <div className={styles.filters}>
       <button
@@ -25,3 +32,4 @@ export default function TodoFilters({ filter, setFilter, counts }) {
     </div>
   );
 }
+

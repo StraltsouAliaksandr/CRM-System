@@ -1,5 +1,4 @@
-import React from 'react';
-import TodoListPage from './pages/TodoListPage.jsx';
+﻿import TodoListPage from './pages/TodoListPage';
 
 export default function App() {
   return (
@@ -8,3 +7,4 @@ export default function App() {
     </div>
   );
 }
+

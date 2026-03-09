@@ -1,4 +1,4 @@
-.form {
+﻿.form {
   display: flex;
   gap: 0.5rem;
 }
@@ -34,3 +34,4 @@
   font-weight: 300;
   display: block;
 }
+

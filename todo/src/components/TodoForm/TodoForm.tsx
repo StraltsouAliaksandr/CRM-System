@@ -1,25 +1,30 @@
-import React, { useState } from 'react';
-import { addTodo } from '../../api/todos.js';
+﻿import { FormEvent, useState } from 'react';
+import { addTodo } from '../../api/todos';
 import styles from './TodoForm.module.css';
 
-export default function TodoForm({ loadTodos }) {
+interface TodoFormProps {
+  loadTodos: () => Promise<void>;
+}
+
+export default function TodoForm({ loadTodos }: TodoFormProps) {
   const [text, setText] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const val = text.trim();
-    if (val.length < 2 || val.length > 64) {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
+    event.preventDefault();
+    const value = text.trim();
+
+    if (value.length < 2 || value.length > 64) {
       setError('Название задачи должно быть от 2 до 64 символов');
       return;
     }
 
     try {
-      await addTodo({ title: val, isDone: false });
+      await addTodo({ title: value, isDone: false });
       setText('');
       setError('');
       await loadTodos();
-    } catch (err) {
+    } catch {
       alert('Ошибка добавления задачи');
     }
   };
@@ -29,7 +34,7 @@ export default function TodoForm({ loadTodos }) {
       <input
         className={styles.input}
         value={text}
-        onChange={(e) => setText(e.target.value)}   
+        onChange={(event) => setText(event.target.value)}
         placeholder="Task To Be Done..."
       />
       <button className={styles.addButton}>Add</button>
@@ -37,3 +42,4 @@ export default function TodoForm({ loadTodos }) {
     </form>
   );
 }
+

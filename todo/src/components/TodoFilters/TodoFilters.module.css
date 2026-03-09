@@ -1,4 +1,4 @@
-.filters {
+﻿.filters {
   display: flex;
   justify-content: space-between;
 }
@@ -19,3 +19,4 @@
   font-weight: bold;
   text-decoration: underline;
 }
+
