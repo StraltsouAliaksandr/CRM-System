@@ -2,13 +2,13 @@
 import styles from './TodoFilters.module.css';
 import { Filter, TodoCounts } from '../../types/todo';
 
-interface TodoFiltersProps {
+interface Props {
   filter: Filter;
   setFilter: Dispatch<SetStateAction<Filter>>;
   counts: TodoCounts;
 }
 
-export default function TodoFilters({ filter, setFilter, counts }: TodoFiltersProps) {
+export default function TodoFilters({ filter, setFilter, counts }: Props) {
   return (
     <div className={styles.filters}>
       <button

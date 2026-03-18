@@ -1,4 +1,4 @@
-﻿import { FormEvent, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { deleteTodo, updateTodo } from '../../api/todos';
 import editIcon from '../../assets/icons/edit.svg';
 import deleteIcon from '../../assets/icons/delete.svg';
@@ -6,26 +6,28 @@ import saveIcon from '../../assets/icons/save.svg';
 import cancelIcon from '../../assets/icons/cancel.svg';
 import styles from './TodoItem.module.css';
 import { Todo } from '../../types/todo';
+import { useNotification } from '../Notifications/NotificationProvider';
 
-interface TodoItemProps {
+interface Props {
   todo: Todo;
   toggle: (id: number, nextState: boolean) => Promise<void>;
   loadTodos: () => Promise<void>;
 }
 
-export default function TodoItem({ todo, toggle, loadTodos }: TodoItemProps) {
-  const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(todo.title);
-  const [error, setError] = useState('');
+export default function TodoItem({ todo, toggle, loadTodos }: Props) {
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [editedTitle, setEditedTitle] = useState<string>(todo.title);
+  const [error, setError] = useState<string>('');
+  const { showNotification } = useNotification();
 
-  const handleEdit = (): void => {
-    setDraft(todo.title);
+  const startEditing = (): void => {
+    setEditedTitle(todo.title);
     setError('');
-    setEditing(true);
+    setIsEditing(true);
   };
 
   const saveTodo = async (): Promise<void> => {
-    const value = draft.trim();
+    const value = editedTitle.trim();
     if (value.length < 2 || value.length > 64) {
       setError('Название задачи должно быть от 2 до 64 символов');
       return;
@@ -33,22 +35,22 @@ export default function TodoItem({ todo, toggle, loadTodos }: TodoItemProps) {
 
     try {
       await updateTodo(todo.id, { title: value, isDone: todo.isDone });
-      setEditing(false);
+      setIsEditing(false);
       await loadTodos();
     } catch {
-      alert('Failed to save todo.');
+      showNotification('Не удалось сохранить задачу.');
     }
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
 
-    if (editing) {
+    if (isEditing) {
       await saveTodo();
       return;
     }
 
-    handleEdit();
+    startEditing();
   };
 
   const removeTodo = async (): Promise<void> => {
@@ -56,7 +58,7 @@ export default function TodoItem({ todo, toggle, loadTodos }: TodoItemProps) {
       await deleteTodo(todo.id);
       await loadTodos();
     } catch {
-      alert('Failed to delete todo.');
+      showNotification('Не удалось удалить задачу.');
     }
   };
 
@@ -64,8 +66,8 @@ export default function TodoItem({ todo, toggle, loadTodos }: TodoItemProps) {
     void toggle(todo.id, !todo.isDone);
   };
 
-  const handleCancel = (): void => {
-    setEditing(false);
+  const cancelEditing = (): void => {
+    setIsEditing(false);
     setError('');
   };
 
@@ -82,12 +84,12 @@ export default function TodoItem({ todo, toggle, loadTodos }: TodoItemProps) {
 
         <label htmlFor={`todo-${todo.id}`} className={styles.customCheckbox} />
 
-        {editing ? (
+        {isEditing ? (
           <>
             <input
               className={styles.text}
-              value={draft}
-              onChange={(event) => setDraft(event.target.value)}
+              value={editedTitle}
+              onChange={(event) => setEditedTitle(event.target.value)}
             />
             {error && <div className={styles.errorMessage}>{error}</div>}
           </>
@@ -102,7 +104,7 @@ export default function TodoItem({ todo, toggle, loadTodos }: TodoItemProps) {
         )}
 
         <div className={styles.buttons}>
-          {editing ? (
+          {isEditing ? (
             <>
               <button className={styles.editButton} type="submit">
                 <img src={saveIcon} alt="Save" />
@@ -110,7 +112,7 @@ export default function TodoItem({ todo, toggle, loadTodos }: TodoItemProps) {
               <button
                 className={styles.cancelButton}
                 type="button"
-                onClick={handleCancel}
+                onClick={cancelEditing}
               >
                 <img src={cancelIcon} alt="Cancel" />
               </button>
@@ -135,4 +137,3 @@ export default function TodoItem({ todo, toggle, loadTodos }: TodoItemProps) {
     </li>
   );
 }
-

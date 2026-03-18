@@ -1,8 +1,9 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getAllToDos, updateTodo } from '../api/todos';
 import TodoForm from '../components/TodoForm/TodoForm';
 import TodoFilters from '../components/TodoFilters/TodoFilters';
 import TodoList from '../components/TodoList/TodoList';
+import { useNotification } from '../components/Notifications/NotificationProvider';
 import styles from './TodoListPage.module.css';
 import { Filter, Todo, TodoCounts } from '../types/todo';
 
@@ -14,6 +15,7 @@ export default function TodoListPage() {
     completed: 0,
   });
   const [filter, setFilter] = useState<Filter>('all');
+  const { showNotification } = useNotification();
 
   const loadTodos = async (): Promise<void> => {
     try {
@@ -21,7 +23,7 @@ export default function TodoListPage() {
       setTodos(data);
       setCounts(info);
     } catch {
-      alert('Не удалось загрузить список задач.');
+      showNotification('Не удалось загрузить список задач.');
     }
   };
 
@@ -30,8 +32,12 @@ export default function TodoListPage() {
   }, [filter]);
 
   const handleToggle = async (id: number, newDone: boolean): Promise<void> => {
-    await updateTodo(id, { isDone: newDone });
-    await loadTodos();
+    try {
+      await updateTodo(id, { isDone: newDone });
+      await loadTodos();
+    } catch {
+      showNotification('Не удалось обновить статус задачи.');
+    }
   };
 
   return (
@@ -42,4 +48,3 @@ export default function TodoListPage() {
     </div>
   );
 }
-

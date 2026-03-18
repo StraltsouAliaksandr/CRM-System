@@ -1,69 +1,41 @@
-﻿import { Filter, Todo, TodoCounts } from '../types/todo';
+import {
+  Filter,
+  GetTodosResult,
+  Todo,
+  TodoPayload,
+  TodosResponse,
+  TodoUpdates,
+} from '../types/todo';
 
 const BASE_URL = 'https://easydev.club/api/v1';
 
-interface ApiInfo {
-  all?: number;
-  inWork?: number;
-  completed?: number;
-}
-
-interface ApiMeta {
-  totalAmount?: number;
-}
-
-interface TodosResponse {
-  data?: Todo[];
-  info?: ApiInfo;
-  meta?: ApiMeta;
-}
-
-interface TodoPayload {
-  title: string;
-  isDone: boolean;
-}
-
-type TodoUpdates = Partial<TodoPayload>;
-
-interface GetTodosResult {
-  data: Todo[];
-  info: TodoCounts;
-}
-
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const res = await fetch(BASE_URL + path, {
+  const response = await fetch(BASE_URL + path, {
     headers: { 'Content-Type': 'application/json' },
     ...options,
   });
 
-  if (!res.ok) {
-    throw new Error(`API error ${res.status}`);
+  if (!response.ok) {
+    throw new Error(`API error ${response.status}`);
   }
 
-  const contentType = res.headers.get('content-type') ?? '';
-  if (res.status === 204 || !contentType.includes('application/json')) {
+  const contentType = response.headers.get('content-type') ?? '';
+  if (response.status === 204 || !contentType.includes('application/json')) {
     return {} as T;
   }
 
-  return (await res.json()) as T;
-}
-
-function buildInfo(resp: TodosResponse, data: Todo[]): TodoCounts {
-  return {
-    all: resp.info?.all ?? resp.meta?.totalAmount ?? data.length,
-    inWork: resp.info?.inWork ?? data.filter((todo) => !todo.isDone).length,
-    completed:
-      resp.info?.completed ?? data.filter((todo) => todo.isDone).length,
-  };
+  return (await response.json()) as T;
 }
 
 export async function getAllToDos(filter: Filter = 'all'): Promise<GetTodosResult> {
-  const resp = await request<TodosResponse>(`/todos?filter=${filter}`);
-  const data = resp.data ?? [];
+  const searchParams = new URLSearchParams({ filter });
+  const todosResponse = await request<TodosResponse>(
+    `/todos?${searchParams.toString()}`
+  );
 
   return {
-    data,
-    info: buildInfo(resp, data),
+    data: todosResponse.data,
+    info: todosResponse.info,
   };
 }
 
@@ -86,4 +58,3 @@ export function deleteTodo(todoId: number): Promise<unknown> {
     method: 'DELETE',
   });
 }
-

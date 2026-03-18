@@ -2,13 +2,13 @@
 import styles from './TodoList.module.css';
 import { Todo } from '../../types/todo';
 
-interface TodoListProps {
+interface Props {
   todos: Todo[];
   loadTodos: () => Promise<void>;
   toggle: (id: number, nextState: boolean) => Promise<void>;
 }
 
-export default function TodoList({ todos, loadTodos, toggle }: TodoListProps) {
+export default function TodoList({ todos, loadTodos, toggle }: Props) {
   if (todos.length === 0) {
     return <p>Нет задач</p>;
   }
