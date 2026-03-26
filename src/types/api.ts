@@ -1,7 +1,7 @@
-export interface Response<T> {
-  data: T;
-}
-
-export interface MetaResponse<T, N extends object> extends Response<T> {
-  meta: N;
+export interface MetaResponse<T, N> {
+  data: T[];
+  info?: N;
+  meta: {
+    totalAmount: number;
+  };
 }

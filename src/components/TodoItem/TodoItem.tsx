@@ -7,14 +7,14 @@ import cancelIcon from '../../assets/icons/cancel.svg';
 import styles from './TodoItem.module.css';
 import { Todo } from '../../types/todo';
 import { useNotification } from '../Notifications/NotificationProvider';
+import { validateTodoTitle } from '../../utils/todoValidation';
 
 interface Props {
   todo: Todo;
-  toggle: (id: number, nextState: boolean) => Promise<void>;
   loadTodos: () => Promise<void>;
 }
 
-export default function TodoItem({ todo, toggle, loadTodos }: Props) {
+export default function TodoItem({ todo, loadTodos }: Props) {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editedTitle, setEditedTitle] = useState<string>(todo.title);
   const [error, setError] = useState<string>('');
@@ -28,8 +28,10 @@ export default function TodoItem({ todo, toggle, loadTodos }: Props) {
 
   const saveTodo = async (): Promise<void> => {
     const value = editedTitle.trim();
-    if (value.length < 2 || value.length > 64) {
-      setError('Название задачи должно быть от 2 до 64 символов');
+    const validationError = validateTodoTitle(value);
+
+    if (validationError) {
+      setError(validationError);
       return;
     }
 
@@ -39,6 +41,15 @@ export default function TodoItem({ todo, toggle, loadTodos }: Props) {
       await loadTodos();
     } catch {
       showNotification('Не удалось сохранить задачу.');
+    }
+  };
+
+  const updateStatus = async (): Promise<void> => {
+    try {
+      await updateTodo(todo.id, { isDone: !todo.isDone });
+      await loadTodos();
+    } catch {
+      showNotification('Не удалось обновить статус задачи.');
     }
   };
 
@@ -62,8 +73,8 @@ export default function TodoItem({ todo, toggle, loadTodos }: Props) {
     }
   };
 
-  const handleToggle = (): void => {
-    void toggle(todo.id, !todo.isDone);
+  const handleStatusToggle = (): void => {
+    void updateStatus();
   };
 
   const cancelEditing = (): void => {
@@ -78,7 +89,7 @@ export default function TodoItem({ todo, toggle, loadTodos }: Props) {
           id={`todo-${todo.id}`}
           type="checkbox"
           checked={todo.isDone}
-          onChange={handleToggle}
+          onChange={handleStatusToggle}
           className={styles.checkbox}
         />
 
@@ -96,7 +107,7 @@ export default function TodoItem({ todo, toggle, loadTodos }: Props) {
         ) : (
           <span
             className={`${styles.text} ${todo.isDone ? styles.completed : ''}`}
-            onClick={handleToggle}
+            onClick={handleStatusToggle}
             style={{ cursor: 'pointer' }}
           >
             {todo.title}

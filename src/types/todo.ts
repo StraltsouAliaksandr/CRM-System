@@ -5,33 +5,21 @@ export type Filter = 'all' | 'inWork' | 'completed';
 export interface Todo {
   id: number;
   title: string;
+  created: string;
   isDone: boolean;
 }
 
-export interface TodoCounts {
+export type TodoRequest = Partial<Omit<Todo, 'id' | 'created'>>;
+
+export interface TodoInfo {
   all: number;
-  inWork: number;
   completed: number;
+  inWork: number;
 }
-
-export interface ApiMeta {
-  totalAmount?: number;
-}
-
-export type TodosInfo = TodoCounts;
-
-export interface TodoPayload {
-  title: string;
-  isDone: boolean;
-}
-
-export type TodoUpdates = Partial<TodoPayload>;
 
 export interface GetTodosResult {
   data: Todo[];
-  info: TodoCounts;
+  info: TodoInfo;
 }
 
-export interface TodosResponse extends MetaResponse<Todo[], ApiMeta> {
-  info: TodosInfo;
-}
+export type TodosResponse = MetaResponse<Todo, TodoInfo>;

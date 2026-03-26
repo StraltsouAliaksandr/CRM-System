@@ -1,11 +1,11 @@
 ﻿import { Dispatch, SetStateAction } from 'react';
 import styles from './TodoFilters.module.css';
-import { Filter, TodoCounts } from '../../types/todo';
+import { Filter, TodoInfo } from '../../types/todo';
 
 interface Props {
   filter: Filter;
   setFilter: Dispatch<SetStateAction<Filter>>;
-  counts: TodoCounts;
+  counts: TodoInfo;
 }
 
 export default function TodoFilters({ filter, setFilter, counts }: Props) {

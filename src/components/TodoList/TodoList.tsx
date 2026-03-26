@@ -1,14 +1,13 @@
-﻿import TodoItem from '../TodoItem/TodoItem';
+import TodoItem from '../TodoItem/TodoItem';
 import styles from './TodoList.module.css';
 import { Todo } from '../../types/todo';
 
 interface Props {
   todos: Todo[];
   loadTodos: () => Promise<void>;
-  toggle: (id: number, nextState: boolean) => Promise<void>;
 }
 
-export default function TodoList({ todos, loadTodos, toggle }: Props) {
+export default function TodoList({ todos, loadTodos }: Props) {
   if (todos.length === 0) {
     return <p>Нет задач</p>;
   }
@@ -16,9 +15,8 @@ export default function TodoList({ todos, loadTodos, toggle }: Props) {
   return (
     <ul className={styles.list}>
       {todos.map((todo) => (
-        <TodoItem key={todo.id} todo={todo} toggle={toggle} loadTodos={loadTodos} />
+        <TodoItem key={todo.id} todo={todo} loadTodos={loadTodos} />
       ))}
     </ul>
   );
 }
-

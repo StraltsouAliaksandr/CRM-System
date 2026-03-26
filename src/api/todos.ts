@@ -2,9 +2,9 @@ import {
   Filter,
   GetTodosResult,
   Todo,
-  TodoPayload,
+  TodoInfo,
+  TodoRequest,
   TodosResponse,
-  TodoUpdates,
 } from '../types/todo';
 
 const BASE_URL = 'https://easydev.club/api/v1';
@@ -35,18 +35,18 @@ export async function getAllToDos(filter: Filter = 'all'): Promise<GetTodosResul
 
   return {
     data: todosResponse.data,
-    info: todosResponse.info,
+    info: todosResponse.info ?? getEmptyTodoInfo(),
   };
 }
 
-export function addTodo(todoData: TodoPayload): Promise<Todo> {
+export function addTodo(todoData: TodoRequest): Promise<Todo> {
   return request<Todo>('/todos', {
     method: 'POST',
     body: JSON.stringify(todoData),
   });
 }
 
-export function updateTodo(todoId: number, updates: TodoUpdates): Promise<Todo> {
+export function updateTodo(todoId: number, updates: TodoRequest): Promise<Todo> {
   return request<Todo>(`/todos/${todoId}`, {
     method: 'PUT',
     body: JSON.stringify(updates),
@@ -57,4 +57,12 @@ export function deleteTodo(todoId: number): Promise<unknown> {
   return request<unknown>(`/todos/${todoId}`, {
     method: 'DELETE',
   });
+}
+
+function getEmptyTodoInfo(): TodoInfo {
+  return {
+    all: 0,
+    completed: 0,
+    inWork: 0,
+  };
 }

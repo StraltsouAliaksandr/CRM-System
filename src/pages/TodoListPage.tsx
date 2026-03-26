@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
-import { getAllToDos, updateTodo } from '../api/todos';
+import { getAllToDos } from '../api/todos';
 import TodoForm from '../components/TodoForm/TodoForm';
 import TodoFilters from '../components/TodoFilters/TodoFilters';
 import TodoList from '../components/TodoList/TodoList';
 import { useNotification } from '../components/Notifications/NotificationProvider';
 import styles from './TodoListPage.module.css';
-import { Filter, Todo, TodoCounts } from '../types/todo';
+import { Filter, Todo, TodoInfo } from '../types/todo';
 
 export default function TodoListPage() {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [counts, setCounts] = useState<TodoCounts>({
+  const [counts, setCounts] = useState<TodoInfo>({
     all: 0,
     inWork: 0,
     completed: 0,
@@ -31,20 +31,11 @@ export default function TodoListPage() {
     void loadTodos();
   }, [filter]);
 
-  const handleToggle = async (id: number, newDone: boolean): Promise<void> => {
-    try {
-      await updateTodo(id, { isDone: newDone });
-      await loadTodos();
-    } catch {
-      showNotification('Не удалось обновить статус задачи.');
-    }
-  };
-
   return (
     <div className={styles.wrapper}>
       <TodoForm loadTodos={loadTodos} />
       <TodoFilters filter={filter} setFilter={setFilter} counts={counts} />
-      <TodoList todos={todos} toggle={handleToggle} loadTodos={loadTodos} />
+      <TodoList todos={todos} loadTodos={loadTodos} />
     </div>
   );
 }
