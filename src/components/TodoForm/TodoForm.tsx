@@ -1,24 +1,22 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { addTodo } from '../../api/todos';
 import { useNotification } from '../Notifications/NotificationProvider';
-import { validateTodoTitle } from '../../utils/todoValidation';
 import styles from './TodoForm.module.css';
 
 interface Props {
-  loadTodos: () => Promise<void>;
+  refreshTodos: () => Promise<void>;
 }
 
-export default function TodoForm({ loadTodos }: Props) {
+export default function TodoForm({ refreshTodos }: Props) {
   const [text, setText] = useState<string>('');
   const [error, setError] = useState<string>('');
   const { showNotification } = useNotification();
 
   const submitNewTodo = async (): Promise<void> => {
     const title = text.trim();
-    const validationError = validateTodoTitle(title);
 
-    if (validationError) {
-      setError(validationError);
+    if (title.length < 2 || title.length > 64) {
+      setError('Название задачи должно быть от 2 до 64 символов');
       return;
     }
 
@@ -26,7 +24,7 @@ export default function TodoForm({ loadTodos }: Props) {
       await addTodo({ title, isDone: false });
       setText('');
       setError('');
-      await loadTodos();
+      await refreshTodos();
     } catch {
       showNotification('Ошибка добавления задачи');
     }

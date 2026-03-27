@@ -17,7 +17,7 @@ export default function TodoListPage() {
   const [filter, setFilter] = useState<Filter>('all');
   const { showNotification } = useNotification();
 
-  const loadTodos = async (): Promise<void> => {
+  const refreshTodos = async (): Promise<void> => {
     try {
       const { data, info } = await getAllToDos(filter);
       setTodos(data);
@@ -28,14 +28,14 @@ export default function TodoListPage() {
   };
 
   useEffect(() => {
-    void loadTodos();
+    void refreshTodos();
   }, [filter]);
 
   return (
     <div className={styles.wrapper}>
-      <TodoForm loadTodos={loadTodos} />
+      <TodoForm refreshTodos={refreshTodos} />
       <TodoFilters filter={filter} setFilter={setFilter} counts={counts} />
-      <TodoList todos={todos} loadTodos={loadTodos} />
+      <TodoList todos={todos} refreshTodos={refreshTodos} />
     </div>
   );
 }

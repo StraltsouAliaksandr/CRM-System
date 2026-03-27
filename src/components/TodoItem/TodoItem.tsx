@@ -11,10 +11,10 @@ import { validateTodoTitle } from '../../utils/todoValidation';
 
 interface Props {
   todo: Todo;
-  loadTodos: () => Promise<void>;
+  refreshTodos: () => Promise<void>;
 }
 
-export default function TodoItem({ todo, loadTodos }: Props) {
+export default function TodoItem({ todo, refreshTodos }: Props) {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editedTitle, setEditedTitle] = useState<string>(todo.title);
   const [error, setError] = useState<string>('');
@@ -38,7 +38,7 @@ export default function TodoItem({ todo, loadTodos }: Props) {
     try {
       await updateTodo(todo.id, { title: value, isDone: todo.isDone });
       setIsEditing(false);
-      await loadTodos();
+      await refreshTodos();
     } catch {
       showNotification('Не удалось сохранить задачу.');
     }
@@ -47,7 +47,7 @@ export default function TodoItem({ todo, loadTodos }: Props) {
   const updateStatus = async (): Promise<void> => {
     try {
       await updateTodo(todo.id, { isDone: !todo.isDone });
-      await loadTodos();
+      await refreshTodos();
     } catch {
       showNotification('Не удалось обновить статус задачи.');
     }
@@ -67,7 +67,7 @@ export default function TodoItem({ todo, loadTodos }: Props) {
   const removeTodo = async (): Promise<void> => {
     try {
       await deleteTodo(todo.id);
-      await loadTodos();
+      await refreshTodos();
     } catch {
       showNotification('Не удалось удалить задачу.');
     }

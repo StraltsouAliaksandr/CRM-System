@@ -4,10 +4,10 @@ import { Todo } from '../../types/todo';
 
 interface Props {
   todos: Todo[];
-  loadTodos: () => Promise<void>;
+  refreshTodos: () => Promise<void>;
 }
 
-export default function TodoList({ todos, loadTodos }: Props) {
+export default function TodoList({ todos, refreshTodos }: Props) {
   if (todos.length === 0) {
     return <p>Нет задач</p>;
   }
@@ -15,7 +15,7 @@ export default function TodoList({ todos, loadTodos }: Props) {
   return (
     <ul className={styles.list}>
       {todos.map((todo) => (
-        <TodoItem key={todo.id} todo={todo} loadTodos={loadTodos} />
+        <TodoItem key={todo.id} todo={todo} refreshTodos={refreshTodos} />
       ))}
     </ul>
   );
