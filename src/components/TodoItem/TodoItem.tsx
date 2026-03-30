@@ -7,7 +7,7 @@ import cancelIcon from '../../assets/icons/cancel.svg';
 import styles from './TodoItem.module.css';
 import { Todo } from '../../types/todo';
 import { useNotification } from '../Notifications/NotificationProvider';
-import { withValidatedTodoTitle } from '../../utils/todoValidation';
+import { validateTodoTitle } from '../../utils/todoValidation';
 
 interface Props {
   todo: Todo;
@@ -28,13 +28,17 @@ export default function TodoItem({ todo, refreshTodos }: Props) {
 
   const saveTodo = async (): Promise<void> => {
     const title = editedTitle.trim();
+    const titleError = validateTodoTitle(title);
+
+    if (titleError) {
+      setError(titleError);
+      return;
+    }
 
     try {
-      await withValidatedTodoTitle(title, setError, async (validatedTitle) => {
-        await updateTodo(todo.id, { title: validatedTitle, isDone: todo.isDone });
-        setIsEditing(false);
-        await refreshTodos();
-      });
+      await updateTodo(todo.id, { title, isDone: todo.isDone });
+      setIsEditing(false);
+      await refreshTodos();
     } catch {
       showNotification('Не удалось сохранить задачу.');
     }

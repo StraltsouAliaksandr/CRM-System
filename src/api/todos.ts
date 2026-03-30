@@ -8,6 +8,11 @@ import {
 } from '../types/todo';
 
 const BASE_URL = 'https://easydev.club/api/v1';
+const DEFAULT_TODO_INFO: TodoInfo = {
+  all: 0,
+  completed: 0,
+  inWork: 0,
+};
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(BASE_URL + path, {
@@ -35,7 +40,7 @@ export async function getAllToDos(filter: Filter = 'all'): Promise<GetTodosResul
 
   return {
     data: todosResponse.data,
-    info: todosResponse.info ?? getEmptyTodoInfo(),
+    info: todosResponse.info ?? DEFAULT_TODO_INFO,
   };
 }
 
@@ -57,12 +62,4 @@ export function deleteTodo(todoId: number): Promise<unknown> {
   return request<unknown>(`/todos/${todoId}`, {
     method: 'DELETE',
   });
-}
-
-function getEmptyTodoInfo(): TodoInfo {
-  return {
-    all: 0,
-    completed: 0,
-    inWork: 0,
-  };
 }

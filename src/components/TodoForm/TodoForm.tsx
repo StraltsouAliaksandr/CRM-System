@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { addTodo } from '../../api/todos';
 import { useNotification } from '../Notifications/NotificationProvider';
-import { withValidatedTodoTitle } from '../../utils/todoValidation';
+import { validateTodoTitle } from '../../utils/todoValidation';
 import styles from './TodoForm.module.css';
 
 interface Props {
@@ -15,14 +15,18 @@ export default function TodoForm({ refreshTodos }: Props) {
 
   const submitNewTodo = async (): Promise<void> => {
     const title = text.trim();
+    const titleError = validateTodoTitle(title);
+
+    if (titleError) {
+      setError(titleError);
+      return;
+    }
 
     try {
-      await withValidatedTodoTitle(title, setError, async (validatedTitle) => {
-        await addTodo({ title: validatedTitle, isDone: false });
-        setText('');
-        setError('');
-        await refreshTodos();
-      });
+      await addTodo({ title, isDone: false });
+      setText('');
+      setError('');
+      await refreshTodos();
     } catch {
       showNotification('Ошибка добавления задачи');
     }
