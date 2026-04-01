@@ -14,10 +14,20 @@ const DEFAULT_TODO_INFO: TodoInfo = {
   inWork: 0,
 };
 
-async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+interface RequestOptions extends Omit<RequestInit, 'body'> {
+  data?: TodoRequest;
+}
+
+async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
+  const { data, headers, ...requestOptions } = options;
+
   const response = await fetch(BASE_URL + path, {
-    headers: { 'Content-Type': 'application/json' },
-    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...headers,
+    },
+    ...requestOptions,
+    body: data ? JSON.stringify(data) : undefined,
   });
 
   if (!response.ok) {
@@ -47,14 +57,14 @@ export async function getAllToDos(filter: Filter = 'all'): Promise<GetTodosResul
 export function addTodo(todoData: TodoRequest): Promise<Todo> {
   return request<Todo>('/todos', {
     method: 'POST',
-    body: JSON.stringify(todoData),
+    data: todoData,
   });
 }
 
 export function updateTodo(todoId: number, updates: TodoRequest): Promise<Todo> {
   return request<Todo>(`/todos/${todoId}`, {
     method: 'PUT',
-    body: JSON.stringify(updates),
+    data: updates,
   });
 }
 

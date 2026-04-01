@@ -46,9 +46,9 @@ export function NotificationProvider({ children }: PropsWithChildren) {
   return (
     <NotificationContext.Provider value={contextValue}>
       {children}
-      <div className={styles.container}>
+      <div className={styles.notificationList}>
         {notifications.map((notification) => (
-          <div key={notification.id} className={styles.notification}>
+          <div key={notification.id} className={styles.notificationItem}>
             {notification.message}
           </div>
         ))}

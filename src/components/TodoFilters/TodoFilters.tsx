@@ -8,27 +8,30 @@ interface Props {
   counts: TodoInfo;
 }
 
+const FILTER_OPTIONS: Array<{
+  key: Filter;
+  label: string;
+  countKey: keyof TodoInfo;
+}> = [
+  { key: 'all', label: 'Все', countKey: 'all' },
+  { key: 'inWork', label: 'В работе', countKey: 'inWork' },
+  { key: 'completed', label: 'Сделано', countKey: 'completed' },
+];
+
 export default function TodoFilters({ filter, setFilter, counts }: Props) {
   return (
     <div className={styles.filters}>
-      <button
-        className={`${styles.filterButton} ${filter === 'all' ? styles.active : ''}`}
-        onClick={() => setFilter('all')}
-      >
-        Все ({counts.all})
-      </button>
-      <button
-        className={`${styles.filterButton} ${filter === 'inWork' ? styles.active : ''}`}
-        onClick={() => setFilter('inWork')}
-      >
-        В работе ({counts.inWork})
-      </button>
-      <button
-        className={`${styles.filterButton} ${filter === 'completed' ? styles.active : ''}`}
-        onClick={() => setFilter('completed')}
-      >
-        Сделано ({counts.completed})
-      </button>
+      {FILTER_OPTIONS.map((option) => (
+        <button
+          key={option.key}
+          className={`${styles.filterButton} ${
+            filter === option.key ? styles.active : ''
+          }`}
+          onClick={() => setFilter(option.key)}
+        >
+          {option.label} ({counts[option.countKey]})
+        </button>
+      ))}
     </div>
   );
 }

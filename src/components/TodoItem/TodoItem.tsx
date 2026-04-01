@@ -64,7 +64,7 @@ export default function TodoItem({ todo, refreshTodos }: Props) {
     startEditing();
   };
 
-  const removeTodo = async (): Promise<void> => {
+  const handleTodoRemove = async (): Promise<void> => {
     try {
       await deleteTodo(todo.id);
       await refreshTodos();
@@ -77,7 +77,7 @@ export default function TodoItem({ todo, refreshTodos }: Props) {
     void updateStatus();
   };
 
-  const cancelEditing = (): void => {
+  const handleEditingCancel = (): void => {
     setIsEditing(false);
     setError('');
   };
@@ -123,7 +123,7 @@ export default function TodoItem({ todo, refreshTodos }: Props) {
               <button
                 className={styles.cancelButton}
                 type="button"
-                onClick={cancelEditing}
+                onClick={handleEditingCancel}
               >
                 <img src={cancelIcon} alt="Cancel" />
               </button>
@@ -137,7 +137,7 @@ export default function TodoItem({ todo, refreshTodos }: Props) {
               <button
                 className={styles.deleteButton}
                 type="button"
-                onClick={removeTodo}
+                onClick={handleTodoRemove}
               >
                 <img src={deleteIcon} alt="Delete" />
               </button>

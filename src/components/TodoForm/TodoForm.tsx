@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { addTodo } from '../../api/todos';
 import { useNotification } from '../Notifications/NotificationProvider';
 import { validateTodoTitle } from '../../utils/todoValidation';
@@ -13,7 +13,7 @@ export default function TodoForm({ refreshTodos }: Props) {
   const [error, setError] = useState<string>('');
   const { showNotification } = useNotification();
 
-  const submitNewTodo = async (): Promise<void> => {
+  const handleNewTodoSubmit = async (): Promise<void> => {
     const title = text.trim();
     const titleError = validateTodoTitle(title);
 
@@ -33,7 +33,7 @@ export default function TodoForm({ refreshTodos }: Props) {
   };
 
   return (
-    <form className={styles.form} action={submitNewTodo}>
+    <form className={styles.form} action={handleNewTodoSubmit}>
       <input
         className={styles.input}
         value={text}
