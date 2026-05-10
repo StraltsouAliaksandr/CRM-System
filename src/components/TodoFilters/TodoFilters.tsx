@@ -1,5 +1,5 @@
-﻿import { Dispatch, SetStateAction } from 'react';
-import styles from './TodoFilters.module.css';
+import { Dispatch, SetStateAction } from 'react';
+import { Segmented } from 'antd';
 import { Filter, TodoInfo } from '../../types/todo';
 
 interface Props {
@@ -20,19 +20,14 @@ const FILTER_OPTIONS: Array<{
 
 export default function TodoFilters({ filter, setFilter, counts }: Props) {
   return (
-    <div className={styles.filters}>
-      {FILTER_OPTIONS.map((option) => (
-        <button
-          key={option.key}
-          className={`${styles.filterButton} ${
-            filter === option.key ? styles.active : ''
-          }`}
-          onClick={() => setFilter(option.key)}
-        >
-          {option.label} ({counts[option.countKey]})
-        </button>
-      ))}
-    </div>
+    <Segmented<Filter>
+      block
+      value={filter}
+      options={FILTER_OPTIONS.map((option) => ({
+        label: `${option.label} (${counts[option.countKey]})`,
+        value: option.key,
+      }))}
+      onChange={(value) => setFilter(value)}
+    />
   );
 }
-

@@ -1,47 +1,49 @@
-﻿import { useState } from 'react';
+import { Button, Form, Input } from 'antd';
 import { addTodo } from '../../api/todos';
-import { useNotification } from '../Notifications/NotificationProvider';
-import { validateTodoTitle } from '../../utils/todoValidation';
-import styles from './TodoForm.module.css';
+import { todoTitleRules } from '../../utils/todoValidation';
 
-interface Props {
-  refreshTodos: () => Promise<void>;
+interface RefreshOptions {
+  force?: boolean;
 }
 
-export default function TodoForm({ refreshTodos }: Props) {
-  const [text, setText] = useState<string>('');
-  const [error, setError] = useState<string>('');
-  const { showNotification } = useNotification();
+interface Props {
+  refreshTodos: (options?: RefreshOptions) => Promise<void>;
+  showMessage: (content: string) => void;
+}
 
-  const handleNewTodoSubmit = async (): Promise<void> => {
-    const title = text.trim();
-    const titleError = validateTodoTitle(title);
+interface TodoFormValues {
+  title: string;
+}
 
-    if (titleError) {
-      setError(titleError);
-      return;
-    }
+export default function TodoForm({ refreshTodos, showMessage }: Props) {
+  const [form] = Form.useForm<TodoFormValues>();
+
+  const handleNewTodoSubmit = async (values: TodoFormValues): Promise<void> => {
+    const title = values.title.trim();
 
     try {
       await addTodo({ title, isDone: false });
-      setText('');
-      setError('');
-      await refreshTodos();
+      form.resetFields();
+      await refreshTodos({ force: true });
     } catch {
-      showNotification('Ошибка добавления задачи');
+      showMessage('Ошибка добавления задачи.');
     }
   };
 
   return (
-    <form className={styles.form} action={handleNewTodoSubmit}>
-      <input
-        className={styles.input}
-        value={text}
-        onChange={(event) => setText(event.target.value)}
-        placeholder="Task To Be Done..."
-      />
-      <button className={styles.addButton}>Add</button>
-      {error && <div className={styles.errorMessage}>{error}</div>}
-    </form>
+    <Form form={form} layout="inline" onFinish={handleNewTodoSubmit}>
+      <Form.Item
+        name="title"
+        rules={todoTitleRules}
+        style={{ flex: 1, minWidth: 240, marginBottom: 0 }}
+      >
+        <Input placeholder="Название задачи" />
+      </Form.Item>
+      <Form.Item style={{ marginBottom: 0 }}>
+        <Button type="primary" htmlType="submit">
+          Создать
+        </Button>
+      </Form.Item>
+    </Form>
   );
 }

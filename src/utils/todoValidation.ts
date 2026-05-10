@@ -1,14 +1,18 @@
-const MIN_TITLE_LENGTH = 2;
-const MAX_TITLE_LENGTH = 64;
+export const MIN_TITLE_LENGTH = 2;
+export const MAX_TITLE_LENGTH = 64;
 
-export function validateTodoTitle(title: string): string | null {
-  if (title.length < MIN_TITLE_LENGTH) {
-    return `Название задачи должно быть не короче ${MIN_TITLE_LENGTH} символов`;
-  }
-
-  if (title.length > MAX_TITLE_LENGTH) {
-    return `Название задачи должно быть не длиннее ${MAX_TITLE_LENGTH} символов`;
-  }
-
-  return null;
-}
+export const todoTitleRules = [
+  {
+    required: true,
+    whitespace: true,
+    message: 'Введите название задачи',
+  },
+  {
+    min: MIN_TITLE_LENGTH,
+    message: `Название задачи должно быть не короче ${MIN_TITLE_LENGTH} символов`,
+  },
+  {
+    max: MAX_TITLE_LENGTH,
+    message: `Название задачи должно быть не длиннее ${MAX_TITLE_LENGTH} символов`,
+  },
+];
