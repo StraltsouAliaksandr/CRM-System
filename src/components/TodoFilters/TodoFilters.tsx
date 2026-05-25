@@ -21,13 +21,13 @@ const FILTER_OPTIONS: Array<{
 export default function TodoFilters({ filter, setFilter, counts }: Props) {
   return (
     <Segmented<Filter>
-      block
       value={filter}
       options={FILTER_OPTIONS.map((option) => ({
         label: `${option.label} (${counts[option.countKey]})`,
         value: option.key,
       }))}
       onChange={(value) => setFilter(value)}
+      block
     />
   );
 }

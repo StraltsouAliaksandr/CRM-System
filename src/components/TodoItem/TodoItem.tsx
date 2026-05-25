@@ -1,11 +1,8 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Flex, Space, Typography } from 'antd';
 import { deleteTodo, updateTodo } from '../../api/todos';
+import { RefreshOptions } from '../../types/refresh';
 import { Todo } from '../../types/todo';
-
-interface RefreshOptions {
-  force?: boolean;
-}
 
 interface Props {
   todo: Todo;
@@ -41,35 +38,33 @@ export default function TodoItem({
   };
 
   return (
-    <div style={{ width: '100%' }}>
-      <Flex align="center" gap={12} style={{ width: '100%' }}>
-        <Checkbox checked={todo.isDone} onChange={() => void updateStatus()} />
-        <Typography.Text
-          delete={todo.isDone}
-          type={todo.isDone ? 'secondary' : undefined}
-          style={{ flex: 1 }}
+    <Flex align="center" gap={12} style={{ width: '100%' }}>
+      <Checkbox checked={todo.isDone} onChange={() => void updateStatus()} />
+      <Typography.Text
+        type={todo.isDone ? 'secondary' : undefined}
+        style={{ flex: 1 }}
+        delete={todo.isDone}
+      >
+        {todo.title}
+      </Typography.Text>
+      <Space>
+        <Button
+          type={isEditing ? 'primary' : 'default'}
+          onClick={() => onEditStart(todo)}
+          icon={<EditOutlined />}
+          htmlType="button"
         >
-          {todo.title}
-        </Typography.Text>
-        <Space>
-          <Button
-            type={isEditing ? 'primary' : 'default'}
-            htmlType="button"
-            onClick={() => onEditStart(todo)}
-            icon={<EditOutlined />}
-          >
-            Редактировать
-          </Button>
-          <Button
-            danger
-            htmlType="button"
-            onClick={handleTodoRemove}
-            icon={<DeleteOutlined />}
-          >
-            Удалить
-          </Button>
-        </Space>
-      </Flex>
-    </div>
+          Редактировать
+        </Button>
+        <Button
+          onClick={handleTodoRemove}
+          icon={<DeleteOutlined />}
+          htmlType="button"
+          danger
+        >
+          Удалить
+        </Button>
+      </Space>
+    </Flex>
   );
 }

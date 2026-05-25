@@ -5,15 +5,12 @@ import { getAllToDos, updateTodo } from '../api/todos';
 import TodoForm from '../components/TodoForm/TodoForm';
 import TodoFilters from '../components/TodoFilters/TodoFilters';
 import TodoList from '../components/TodoList/TodoList';
+import { RefreshOptions } from '../types/refresh';
 import styles from './TodoListPage.module.css';
 import { Filter, Todo, TodoInfo } from '../types/todo';
 import { todoTitleRules } from '../utils/todoValidation';
 
 const AUTO_REFRESH_INTERVAL_MS = 5000;
-
-interface RefreshOptions {
-  force?: boolean;
-}
 
 interface EditTodoValues {
   title: string;
@@ -153,9 +150,9 @@ export default function TodoListPage() {
 
       <Modal
         title="Редактировать задачу"
-        open={Boolean(editingTodo)}
         onCancel={handleEditCancel}
         footer={null}
+        open={Boolean(editingTodo)}
         destroyOnHidden
       >
         <Form form={editForm} layout="vertical" onFinish={handleEditSave}>

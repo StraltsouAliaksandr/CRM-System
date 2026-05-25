@@ -1,11 +1,8 @@
 import { Empty, List } from 'antd';
 import TodoItem from '../TodoItem/TodoItem';
+import { RefreshOptions } from '../../types/refresh';
 import { Todo } from '../../types/todo';
 import { getTodoKey } from '../../utils/todoKeys';
-
-interface RefreshOptions {
-  force?: boolean;
-}
 
 interface Props {
   todos: Todo[];

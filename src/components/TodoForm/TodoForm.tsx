@@ -1,10 +1,7 @@
 import { Button, Form, Input } from 'antd';
 import { addTodo } from '../../api/todos';
+import { RefreshOptions } from '../../types/refresh';
 import { todoTitleRules } from '../../utils/todoValidation';
-
-interface RefreshOptions {
-  force?: boolean;
-}
 
 interface Props {
   refreshTodos: (options?: RefreshOptions) => Promise<void>;
