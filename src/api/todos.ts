@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {
   Filter,
   GetTodosResult,
@@ -8,45 +9,32 @@ import {
 } from '../types/todo';
 
 const BASE_URL = 'https://easydev.club/api/v1';
+
+const apiClient = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 const DEFAULT_TODO_INFO: TodoInfo = {
   all: 0,
   completed: 0,
   inWork: 0,
 };
 
-interface RequestOptions extends Omit<RequestInit, 'body'> {
-  data?: TodoRequest;
+interface GetTodosOptions {
+  signal?: AbortSignal;
 }
 
-async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const { data, headers, ...requestOptions } = options;
-
-  const response = await fetch(BASE_URL + path, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...headers,
-    },
-    ...requestOptions,
-    body: data ? JSON.stringify(data) : undefined,
+export async function getAllToDos(
+  filter: Filter = 'all',
+  options: GetTodosOptions = {}
+): Promise<GetTodosResult> {
+  const { data: todosResponse } = await apiClient.get<TodosResponse>('/todos', {
+    params: { filter },
+    signal: options.signal,
   });
-
-  if (!response.ok) {
-    throw new Error(`API error ${response.status}`);
-  }
-
-  const contentType = response.headers.get('content-type') ?? '';
-  if (response.status === 204 || !contentType.includes('application/json')) {
-    return {} as T;
-  }
-
-  return (await response.json()) as T;
-}
-
-export async function getAllToDos(filter: Filter = 'all'): Promise<GetTodosResult> {
-  const searchParams = new URLSearchParams({ filter });
-  const todosResponse = await request<TodosResponse>(
-    `/todos?${searchParams.toString()}`
-  );
 
   return {
     data: todosResponse.data,
@@ -54,22 +42,18 @@ export async function getAllToDos(filter: Filter = 'all'): Promise<GetTodosResul
   };
 }
 
-export function addTodo(todoData: TodoRequest): Promise<Todo> {
-  return request<Todo>('/todos', {
-    method: 'POST',
-    data: todoData,
-  });
+export async function addTodo(todoData: TodoRequest): Promise<Todo> {
+  const { data } = await apiClient.post<Todo>('/todos', todoData);
+
+  return data;
 }
 
-export function updateTodo(todoId: number, updates: TodoRequest): Promise<Todo> {
-  return request<Todo>(`/todos/${todoId}`, {
-    method: 'PUT',
-    data: updates,
-  });
+export async function updateTodo(todoId: number, updates: TodoRequest): Promise<Todo> {
+  const { data } = await apiClient.put<Todo>(`/todos/${todoId}`, updates);
+
+  return data;
 }
 
-export function deleteTodo(todoId: number): Promise<unknown> {
-  return request<unknown>(`/todos/${todoId}`, {
-    method: 'DELETE',
-  });
+export async function deleteTodo(todoId: number): Promise<void> {
+  await apiClient.delete(`/todos/${todoId}`);
 }
