@@ -1,0 +1,17 @@
+.appLayout {
+  min-height: 100vh;
+}
+
+.appLogo {
+  padding: 24px 16px;
+}
+
+.appContent {
+  padding: 24px;
+}
+
+@media (max-width: 768px) {
+  .appContent {
+    padding: 16px;
+  }
+}
