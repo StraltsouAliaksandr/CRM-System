@@ -1,52 +1,33 @@
-import { UserOutlined, UnorderedListOutlined } from '@ant-design/icons';
-import { Layout, Menu, Typography } from 'antd';
-import type { MenuProps } from 'antd';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import TodoListPage from './pages/TodoListPage';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import AuthInitializer from './components/AuthInitializer/AuthInitializer';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import AuthLayout from './layouts/AuthLayout';
+import MainLayout from './layouts/MainLayout';
+import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
+import RegisterPage from './pages/RegisterPage';
+import TodoListPage from './pages/TodoListPage';
 import './App.css';
 
 export default function App() {
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const menuItems: MenuProps['items'] = [
-    {
-      key: '/',
-      icon: <UnorderedListOutlined />,
-      label: 'Список задач',
-    },
-    {
-      key: '/profile',
-      icon: <UserOutlined />,
-      label: 'Профиль',
-    },
-  ];
-
   return (
-    <Layout className="appLayout">
-      <Layout.Sider breakpoint="lg" collapsedWidth="0">
-        <div className="appLogo">
-          <Typography.Title level={4} style={{ color: '#fff', margin: 0 }}>
-            CRM Todos
-          </Typography.Title>
-        </div>
-        <Menu
-          theme="dark"
-          mode="inline"
-          selectedKeys={[location.pathname]}
-          items={menuItems}
-          onClick={({ key }) => navigate(key)}
-        />
-      </Layout.Sider>
-      <Layout>
-        <Layout.Content className="appContent">
-          <Routes>
-            <Route path="/" element={<TodoListPage />} />
+    <AuthInitializer>
+      <Routes>
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Route>
+
+        <Route element={<ProtectedRoute />}>
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<Navigate to="/todos" replace />} />
+            <Route path="/todos" element={<TodoListPage />} />
             <Route path="/profile" element={<ProfilePage />} />
-          </Routes>
-        </Layout.Content>
-      </Layout>
-    </Layout>
+          </Route>
+        </Route>
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </AuthInitializer>
   );
 }

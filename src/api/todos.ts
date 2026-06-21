@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {
   Filter,
   GetTodosResult,
@@ -7,15 +6,7 @@ import {
   TodoRequest,
   TodosResponse,
 } from '../types/todo';
-
-const BASE_URL = 'https://easydev.club/api/v1';
-
-const apiClient = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+import { apiClient } from './client';
 
 const DEFAULT_TODO_INFO: TodoInfo = {
   all: 0,

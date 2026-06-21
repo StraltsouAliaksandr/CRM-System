@@ -2,13 +2,13 @@ import axios from 'axios';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Card, Flex, Form, Input, Modal, Typography, message } from 'antd';
 import { getAllToDos, updateTodo } from '../api/todos';
-import TodoForm from '../components/TodoForm/TodoForm';
 import TodoFilters from '../components/TodoFilters/TodoFilters';
+import TodoForm from '../components/TodoForm/TodoForm';
 import TodoList from '../components/TodoList/TodoList';
 import { RefreshOptions } from '../types/refresh';
-import styles from './TodoListPage.module.css';
 import { Filter, Todo, TodoInfo } from '../types/todo';
 import { todoTitleRules } from '../utils/todoValidation';
+import styles from './TodoListPage.module.css';
 
 const AUTO_REFRESH_INTERVAL_MS = 5000;
 
