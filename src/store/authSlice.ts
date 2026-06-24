@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { accessTokenManager } from '../auth/accessTokenManager';
 import {
   getApiErrorMessage,
   logoutRequest,
@@ -12,7 +13,6 @@ import type { AuthData, Profile, RegistrationFormValues } from '../types/auth';
 const REFRESH_TOKEN_STORAGE_KEY = 'refreshToken';
 
 interface AuthState {
-  accessToken: string | null;
   user: Profile | null;
   isInitializing: boolean;
   isAuthenticated: boolean;
@@ -20,7 +20,6 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  accessToken: null,
   user: null,
   isInitializing: true,
   isAuthenticated: false,
@@ -45,20 +44,22 @@ export const initializeAuth = createAsyncThunk(
     const refreshToken = getStoredRefreshToken();
 
     if (!refreshToken) {
+      accessTokenManager.clear();
       return null;
     }
 
     try {
       const tokens = await refreshTokenRequest(refreshToken);
       saveRefreshToken(tokens.refreshToken);
+      accessTokenManager.set(tokens.accessToken);
 
       const profile = await getProfileRequest(tokens.accessToken);
 
       return {
-        accessToken: tokens.accessToken,
         user: profile,
       };
     } catch {
+      accessTokenManager.clear();
       clearRefreshToken();
 
       return rejectWithValue('Сессия истекла. Выполните вход повторно.');
@@ -72,14 +73,16 @@ export const signIn = createAsyncThunk(
     try {
       const tokens = await signInRequest(payload);
       saveRefreshToken(tokens.refreshToken);
+      accessTokenManager.set(tokens.accessToken);
 
       const profile = await getProfileRequest(tokens.accessToken);
 
       return {
-        accessToken: tokens.accessToken,
         user: profile,
       };
     } catch (error) {
+      accessTokenManager.clear();
+
       return rejectWithValue(
         getApiErrorMessage(error, 'Не удалось выполнить вход.', {
           401: 'Неверные логин или пароль.',
@@ -108,6 +111,7 @@ export const logout = createAsyncThunk('auth/logout', async () => {
   try {
     await logoutRequest();
   } finally {
+    accessTokenManager.clear();
     clearRefreshToken();
   }
 });
@@ -117,11 +121,11 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     clearAuthState(state) {
-      state.accessToken = null;
       state.user = null;
       state.isAuthenticated = false;
       state.authError = null;
       state.isInitializing = false;
+      accessTokenManager.clear();
       clearRefreshToken();
     },
     clearAuthError(state) {
@@ -138,19 +142,16 @@ const authSlice = createSlice({
         state.isInitializing = false;
 
         if (!action.payload) {
-          state.accessToken = null;
           state.user = null;
           state.isAuthenticated = false;
           return;
         }
 
-        state.accessToken = action.payload.accessToken;
         state.user = action.payload.user;
         state.isAuthenticated = true;
       })
       .addCase(initializeAuth.rejected, (state, action) => {
         state.isInitializing = false;
-        state.accessToken = null;
         state.user = null;
         state.isAuthenticated = false;
         state.authError = (action.payload as string) ?? null;
@@ -159,7 +160,6 @@ const authSlice = createSlice({
         state.authError = null;
       })
       .addCase(signIn.fulfilled, (state, action) => {
-        state.accessToken = action.payload.accessToken;
         state.user = action.payload.user;
         state.isAuthenticated = true;
         state.authError = null;
@@ -175,13 +175,11 @@ const authSlice = createSlice({
           (action.payload as string) ?? 'Не удалось зарегистрировать пользователя.';
       })
       .addCase(logout.fulfilled, (state) => {
-        state.accessToken = null;
         state.user = null;
         state.isAuthenticated = false;
         state.authError = null;
       })
       .addCase(logout.rejected, (state) => {
-        state.accessToken = null;
         state.user = null;
         state.isAuthenticated = false;
         state.authError = null;

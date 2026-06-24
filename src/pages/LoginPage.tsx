@@ -43,11 +43,11 @@ export default function LoginPage() {
 
       <Form className="authForm" form={form} layout="vertical" onFinish={handleFinish}>
         <Form.Item
-          label="Email"
+          label="Логин"
           name="login"
           rules={[{ required: true, message: 'Введите логин' }]}
         >
-          <Input placeholder="mail@abc.com" />
+          <Input placeholder="Введите логин" />
         </Form.Item>
 
         <Form.Item
