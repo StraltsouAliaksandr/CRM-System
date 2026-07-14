@@ -1,9 +1,9 @@
 import { Card, Flex } from 'antd';
 import { Navigate, Outlet } from 'react-router-dom';
-import brandMarkIcon from '../assets/icons/Group 1686550876.svg';
-import authIllustration from '../assets/icons/illustration auth.svg';
+import brandMarkIcon from '../assets/icons/auth-brand-mark.svg';
+import authIllustration from '../assets/icons/login-page-illustration.svg';
 import { useAppSelector } from '../store/hooks';
-import './AuthLayout.css';
+import styles from './AuthLayout.module.css';
 
 export default function AuthLayout() {
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
@@ -13,19 +13,24 @@ export default function AuthLayout() {
   }
 
   return (
-    <div className="authShell">
+    <div className={styles.authShell}>
       <Flex align="center" justify="center" style={{ minHeight: '100%' }}>
-        <Card className="authCard" bodyStyle={{ padding: 0 }}>
-          <Flex className="authSplit">
-            <div className="authVisual">
-              <div className="authArtwork">
-                <img className="authIllustration" src={authIllustration} alt="" aria-hidden="true" />
+        <Card className={styles.authCard} bodyStyle={{ padding: 0 }}>
+          <Flex className={styles.authSplit}>
+            <div className={styles.authVisual}>
+              <div className={styles.authArtwork}>
+                <img
+                  className={styles.authIllustration}
+                  src={authIllustration}
+                  alt=""
+                  aria-hidden="true"
+                />
               </div>
             </div>
 
-            <div className="authPanel">
-              <div className="authPanelInner">
-                <img className="authBrandMark" src={brandMarkIcon} alt="" aria-hidden="true" />
+            <div className={styles.authPanel}>
+              <div className={styles.authPanelInner}>
+                <img className={styles.authBrandMark} src={brandMarkIcon} alt="" aria-hidden="true" />
                 <Outlet />
               </div>
             </div>

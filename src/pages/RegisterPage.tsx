@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { clearAuthError, signUp } from '../store/authSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import type { RegistrationFormValues } from '../types/auth';
-import './AuthPages.css';
+import styles from './AuthPages.module.css';
 
 const usernamePattern = /^[A-Za-zА-Яа-яЁё]+$/;
 const loginPattern = /^[A-Za-z]+$/;
@@ -34,17 +34,34 @@ export default function RegisterPage() {
   };
 
   return (
-    <Flex className="authPageStack" vertical gap={16}>
-      <div>
-        <Typography.Title className="authFormTitle" level={2}>
+    <Flex className={styles.authPageStack} vertical gap={16}>
+      <div className={styles.authIntroBlock}>
+        <Typography.Title
+          level={2}
+          style={{
+            marginBottom: 6,
+            color: '#525252',
+            fontSize: 32,
+            fontWeight: 700,
+            lineHeight: 1.15,
+          }}
+        >
           Create your Account
         </Typography.Title>
-        <Typography.Text className="authFormSubtitle" type="secondary">
+        <Typography.Text
+          type="secondary"
+          style={{
+            display: 'block',
+            marginBottom: 20,
+            color: '#555555',
+            fontSize: 16,
+          }}
+        >
           Join the workspace and start managing tasks right away.
         </Typography.Text>
       </div>
 
-      <Form className="authForm" form={form} layout="vertical" onFinish={handleFinish}>
+      <Form className={styles.authForm} form={form} layout="vertical" onFinish={handleFinish}>
         <Form.Item
           label="Username"
           name="username"
@@ -136,13 +153,13 @@ export default function RegisterPage() {
         </Form.Item>
 
         <Form.Item style={{ marginBottom: 0 }}>
-          <Button className="authSubmitButton" type="primary" htmlType="submit" block>
+          <Button className={styles.authSubmitButton} type="primary" htmlType="submit" block>
             Create account
           </Button>
         </Form.Item>
       </Form>
 
-      <Typography.Text className="authFooterText">
+      <Typography.Text className={styles.authFooterText} style={{ color: '#a1a1a1' }}>
         Already registered? <Link to="/login">Login</Link>
       </Typography.Text>
     </Flex>

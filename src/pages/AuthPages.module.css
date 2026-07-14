@@ -1,0 +1,115 @@
+.authForm {
+  width: 100%;
+  max-width: 420px;
+}
+
+.authPageStack {
+  min-height: 596px;
+  width: 100%;
+  align-items: center;
+}
+
+.authPageStack > .authIntroBlock,
+.authPageStack > .authForm {
+  width: 100%;
+  max-width: 420px;
+}
+
+.authForm :global(.ant-form-item) {
+  margin-bottom: 12px;
+}
+
+.authForm :global(.ant-form-item-label) > label {
+  color: #7d7d7d;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.authForm :global(.ant-input),
+.authForm :global(.ant-input-password) {
+  min-height: 34px;
+  background: #fff;
+  border-color: #ded2d9;
+  border-radius: 4px;
+  box-shadow: none;
+  font-size: 13px;
+}
+
+.authForm :global(.ant-input-affix-wrapper) {
+  background: #fff;
+}
+
+.authForm :global(.ant-input::placeholder),
+.authForm :global(.ant-input-password input::placeholder) {
+  color: #d0c8cd;
+}
+
+.authForm :global(.ant-input:-webkit-autofill),
+.authForm :global(.ant-input:-webkit-autofill:hover),
+.authForm :global(.ant-input:-webkit-autofill:focus),
+.authForm :global(.ant-input-password input:-webkit-autofill),
+.authForm :global(.ant-input-password input:-webkit-autofill:hover),
+.authForm :global(.ant-input-password input:-webkit-autofill:focus) {
+  -webkit-text-fill-color: #222 !important;
+  transition: background-color 9999s ease-in-out 0s;
+  box-shadow: 0 0 0 1000px #fff inset !important;
+  caret-color: #222;
+}
+
+.authRememberRow {
+  margin-bottom: 22px;
+}
+
+.authRememberRow :global(.ant-form-item-control-input) {
+  min-height: auto;
+}
+
+.authAuxRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.authRememberCheckbox {
+  color: #b3aab0;
+  font-size: 12px;
+}
+
+.authRememberCheckbox :global(.ant-checkbox-checked) :global(.ant-checkbox-inner) {
+  border-color: #7f265b;
+  background: #7f265b;
+}
+
+.authForgotLink {
+  color: #7f265b;
+  font-size: 12px;
+}
+
+.authSubmitButton {
+  height: 42px;
+  border-color: #7f265b;
+  border-radius: 4px;
+  background: #7f265b;
+  box-shadow: none;
+  font-weight: 600;
+}
+
+.authSubmitButton:hover,
+.authSubmitButton:focus {
+  border-color: #93336b;
+  background: #93336b;
+}
+
+.authFooterText {
+  display: block;
+  margin-top: auto;
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+  line-height: 25px;
+}
+
+.authFooterText a {
+  color: #7f265b;
+}
