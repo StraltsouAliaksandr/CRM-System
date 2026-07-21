@@ -1,0 +1,16 @@
+.authForm {
+  width: 100%;
+  max-width: 420px;
+}
+
+.authPageStack {
+  min-height: 596px;
+  width: 100%;
+  align-items: center;
+}
+
+.authPageStack > .authIntroBlock,
+.authPageStack > .authForm {
+  width: 100%;
+  max-width: 420px;
+}

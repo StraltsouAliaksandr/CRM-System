@@ -2,13 +2,13 @@ import axios from 'axios';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Card, Flex, Form, Input, Modal, Typography, message } from 'antd';
 import { getAllToDos, updateTodo } from '../api/todos';
-import TodoForm from '../components/TodoForm/TodoForm';
 import TodoFilters from '../components/TodoFilters/TodoFilters';
+import TodoForm from '../components/TodoForm/TodoForm';
 import TodoList from '../components/TodoList/TodoList';
 import { RefreshOptions } from '../types/refresh';
-import styles from './TodoListPage.module.css';
 import { Filter, Todo, TodoInfo } from '../types/todo';
 import { todoTitleRules } from '../utils/todoValidation';
+import styles from './TodoListPage.module.css';
 
 const AUTO_REFRESH_INTERVAL_MS = 5000;
 
@@ -30,7 +30,7 @@ export default function TodoListPage() {
   const [editForm] = Form.useForm<EditTodoValues>();
 
   const showErrorMessage = useCallback((content: string): void => {
-    void message.error(content);
+    message.error(content);
   }, []);
 
   const refreshTodos = useCallback(
@@ -108,7 +108,7 @@ export default function TodoListPage() {
   );
 
   useEffect(() => {
-    void refreshTodos({ force: true });
+    refreshTodos({ force: true });
 
     return () => {
       activeRefreshControllerRef.current?.abort();
@@ -121,7 +121,7 @@ export default function TodoListPage() {
     }
 
     const intervalId = window.setInterval(() => {
-      void refreshTodos();
+      refreshTodos();
     }, AUTO_REFRESH_INTERVAL_MS);
 
     return () => {
