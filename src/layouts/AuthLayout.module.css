@@ -65,12 +65,6 @@
   background: #fff;
 }
 
-.authPanelInner {
-  width: 100%;
-  max-width: 811px;
-  min-height: 596px;
-}
-
 .authBrandMark {
   display: block;
   width: 72px;
@@ -102,11 +96,6 @@
   .authPanel {
     flex-basis: auto;
     padding: 40px 24px;
-  }
-
-  .authPanelInner {
-    max-width: 420px;
-    min-height: auto;
   }
 
   .authBrandMark {

@@ -39,7 +39,7 @@ export default function TodoItem({
 
   return (
     <Flex align="center" gap={12} style={{ width: '100%' }}>
-      <Checkbox checked={todo.isDone} onChange={() => void updateStatus()} />
+      <Checkbox checked={todo.isDone} onChange={updateStatus} />
       <Typography.Text
         type={todo.isDone ? 'secondary' : undefined}
         style={{ flex: 1 }}

@@ -29,10 +29,17 @@ export default function AuthLayout() {
             </div>
 
             <div className={styles.authPanel}>
-              <div className={styles.authPanelInner}>
+              <Flex
+                vertical
+                style={{
+                  width: '100%',
+                  maxWidth: 811,
+                  minHeight: 596,
+                }}
+              >
                 <img className={styles.authBrandMark} src={brandMarkIcon} alt="" aria-hidden="true" />
                 <Outlet />
-              </div>
+              </Flex>
             </div>
           </Flex>
         </Card>

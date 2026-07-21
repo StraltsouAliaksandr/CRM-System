@@ -47,7 +47,7 @@ export default function MainLayout() {
       </Layout.Sider>
       <Layout>
         <Layout.Header className="appHeader">
-          <Button icon={<LogoutOutlined />} onClick={() => void handleLogout()}>
+          <Button icon={<LogoutOutlined />} onClick={handleLogout}>
             Выйти
           </Button>
         </Layout.Header>

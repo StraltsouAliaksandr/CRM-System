@@ -16,7 +16,7 @@ export default function AuthInitializer({ children }: PropsWithChildren) {
 
     hasInitializedRef.current = true;
 
-    void dispatch(initializeAuth())
+    dispatch(initializeAuth())
       .unwrap()
       .catch(() => {
         dispatch(clearAuthState());

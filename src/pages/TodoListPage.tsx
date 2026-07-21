@@ -30,7 +30,7 @@ export default function TodoListPage() {
   const [editForm] = Form.useForm<EditTodoValues>();
 
   const showErrorMessage = useCallback((content: string): void => {
-    void message.error(content);
+    message.error(content);
   }, []);
 
   const refreshTodos = useCallback(
@@ -108,7 +108,7 @@ export default function TodoListPage() {
   );
 
   useEffect(() => {
-    void refreshTodos({ force: true });
+    refreshTodos({ force: true });
 
     return () => {
       activeRefreshControllerRef.current?.abort();
@@ -121,7 +121,7 @@ export default function TodoListPage() {
     }
 
     const intervalId = window.setInterval(() => {
-      void refreshTodos();
+      refreshTodos();
     }, AUTO_REFRESH_INTERVAL_MS);
 
     return () => {

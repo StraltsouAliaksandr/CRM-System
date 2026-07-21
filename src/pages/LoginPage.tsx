@@ -15,7 +15,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (authError) {
-      void message.error(authError);
+      message.error(authError);
       dispatch(clearAuthError());
     }
   }, [authError, dispatch]);
@@ -33,65 +33,46 @@ export default function LoginPage() {
   return (
     <Flex className={styles.authPageStack} vertical gap={16}>
       <div className={styles.authIntroBlock}>
-        <Typography.Title
-          level={2}
-          style={{
-            marginBottom: 6,
-            color: '#525252',
-            fontSize: 32,
-            fontWeight: 700,
-            lineHeight: 1.15,
-          }}
-        >
-          Login to your Account
-        </Typography.Title>
-        <Typography.Text
-          type="secondary"
-          style={{
-            display: 'block',
-            marginBottom: 20,
-            color: '#555555',
-            fontSize: 16,
-          }}
-        >
-          See what is going on with your business
-        </Typography.Text>
+        <Typography.Title level={2}>Вход в аккаунт</Typography.Title>
+        <Typography.Text type="secondary">Войдите, чтобы продолжить работу</Typography.Text>
       </div>
 
       <Form className={styles.authForm} form={form} layout="vertical" onFinish={handleFinish}>
         <Form.Item
-          label="Login"
+          label="Логин"
           name="login"
           rules={[{ required: true, message: 'Введите логин' }]}
         >
-          <Input placeholder="Login" />
+          <Input placeholder="Введите логин" />
         </Form.Item>
 
         <Form.Item
-          label="Password"
+          label="Пароль"
           name="password"
           rules={[{ required: true, message: 'Введите пароль' }]}
         >
-          <Input.Password placeholder="................" />
+          <Input.Password placeholder="Введите пароль" />
         </Form.Item>
 
-        <Form.Item className={styles.authRememberRow}>
-          <div className={styles.authAuxRow}>
-            <Checkbox className={styles.authRememberCheckbox}>Remember Me</Checkbox>
-            <span className={styles.authForgotLink}>Forgot Password?</span>
-          </div>
+        <Form.Item>
+          <Flex align="center" justify="space-between" gap={12}>
+            <Checkbox>Запомнить меня</Checkbox>
+            <Typography.Link>Забыли пароль?</Typography.Link>
+          </Flex>
         </Form.Item>
 
         <Form.Item style={{ marginBottom: 0 }}>
-          <Button className={styles.authSubmitButton} type="primary" htmlType="submit" block>
-            Login
+          <Button type="primary" htmlType="submit" block>
+            Войти
           </Button>
         </Form.Item>
       </Form>
 
-      <Typography.Text className={styles.authFooterText} style={{ color: '#a1a1a1' }}>
-        Not Registered Yet? <Link to="/register">Create an account</Link>
-      </Typography.Text>
+      <Flex justify="center" style={{ width: '100%', marginTop: 'auto' }}>
+        <Typography.Text type="secondary">
+          Нет аккаунта? <Link to="/register">Зарегистрироваться</Link>
+        </Typography.Text>
+      </Flex>
     </Flex>
   );
 }

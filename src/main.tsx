@@ -4,14 +4,14 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { setupApiClient } from './api/client';
 import App from './App';
-import { accessTokenManager } from './auth/accessTokenManager';
+import { tokenManager } from './auth/accessTokenManager';
 import 'antd/dist/reset.css';
 import './index.css';
 import { store } from './store';
 import { clearAuthState } from './store/authSlice';
 
 setupApiClient({
-  getAccessToken: () => accessTokenManager.get(),
+  getAccessToken: () => tokenManager.getAccessToken(),
   onUnauthorized: () => {
     store.dispatch(clearAuthState());
   },

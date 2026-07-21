@@ -9,6 +9,12 @@ import styles from './AuthPages.module.css';
 const usernamePattern = /^[A-Za-zА-Яа-яЁё]+$/;
 const loginPattern = /^[A-Za-z]+$/;
 const phonePattern = /^\+?[0-9]{10,15}$/;
+const usernameMinLength = 1;
+const usernameMaxLength = 60;
+const loginMinLength = 2;
+const loginMaxLength = 60;
+const passwordMinLength = 6;
+const passwordMaxLength = 60;
 
 export default function RegisterPage() {
   const dispatch = useAppDispatch();
@@ -18,7 +24,7 @@ export default function RegisterPage() {
 
   useEffect(() => {
     if (authError) {
-      void message.error(authError);
+      message.error(authError);
       dispatch(clearAuthError());
     }
   }, [authError, dispatch]);
@@ -26,7 +32,7 @@ export default function RegisterPage() {
   const handleFinish = async (values: RegistrationFormValues): Promise<void> => {
     try {
       await dispatch(signUp(values)).unwrap();
-      void message.success('Регистрация прошла успешно. Теперь можно войти.');
+      message.success('Регистрация прошла успешно. Теперь можно войти.');
       navigate('/login', { replace: true });
     } catch {
       return;
@@ -36,38 +42,23 @@ export default function RegisterPage() {
   return (
     <Flex className={styles.authPageStack} vertical gap={16}>
       <div className={styles.authIntroBlock}>
-        <Typography.Title
-          level={2}
-          style={{
-            marginBottom: 6,
-            color: '#525252',
-            fontSize: 32,
-            fontWeight: 700,
-            lineHeight: 1.15,
-          }}
-        >
-          Create your Account
-        </Typography.Title>
-        <Typography.Text
-          type="secondary"
-          style={{
-            display: 'block',
-            marginBottom: 20,
-            color: '#555555',
-            fontSize: 16,
-          }}
-        >
-          Join the workspace and start managing tasks right away.
+        <Typography.Title level={2}>Создайте аккаунт</Typography.Title>
+        <Typography.Text type="secondary">
+          Зарегистрируйтесь, чтобы сразу приступить к работе с задачами.
         </Typography.Text>
       </div>
 
       <Form className={styles.authForm} form={form} layout="vertical" onFinish={handleFinish}>
         <Form.Item
-          label="Username"
+          label="Имя"
           name="username"
           rules={[
             { required: true, message: 'Введите имя' },
-            { min: 1, max: 60, message: 'Имя должно содержать от 1 до 60 символов' },
+            {
+              min: usernameMinLength,
+              max: usernameMaxLength,
+              message: `Имя должно содержать от ${usernameMinLength} до ${usernameMaxLength} символов`,
+            },
             {
               pattern: usernamePattern,
               message: 'Имя должно содержать только русские или латинские буквы',
@@ -78,11 +69,15 @@ export default function RegisterPage() {
         </Form.Item>
 
         <Form.Item
-          label="Login"
+          label="Логин"
           name="login"
           rules={[
             { required: true, message: 'Введите логин' },
-            { min: 2, max: 60, message: 'Логин должен содержать от 2 до 60 символов' },
+            {
+              min: loginMinLength,
+              max: loginMaxLength,
+              message: `Логин должен содержать от ${loginMinLength} до ${loginMaxLength} символов`,
+            },
             {
               pattern: loginPattern,
               message: 'Логин должен содержать только латинские буквы',
@@ -93,7 +88,7 @@ export default function RegisterPage() {
         </Form.Item>
 
         <Form.Item
-          label="Email"
+          label="Почта"
           name="email"
           rules={[
             { required: true, message: 'Введите email' },
@@ -104,17 +99,12 @@ export default function RegisterPage() {
         </Form.Item>
 
         <Form.Item
-          label="Phone"
+          label="Телефон"
           name="phoneNumber"
           rules={[
             {
-              validator: async (_, value: string | undefined) => {
-                if (!value || phonePattern.test(value)) {
-                  return;
-                }
-
-                throw new Error('Введите корректный номер телефона');
-              },
+              pattern: phonePattern,
+              message: 'Введите корректный номер телефона',
             },
           ]}
         >
@@ -122,18 +112,22 @@ export default function RegisterPage() {
         </Form.Item>
 
         <Form.Item
-          label="Password"
+          label="Пароль"
           name="password"
           rules={[
             { required: true, message: 'Введите пароль' },
-            { min: 6, max: 60, message: 'Пароль должен содержать от 6 до 60 символов' },
+            {
+              min: passwordMinLength,
+              max: passwordMaxLength,
+              message: `Пароль должен содержать от ${passwordMinLength} до ${passwordMaxLength} символов`,
+            },
           ]}
         >
           <Input.Password placeholder="Введите пароль" />
         </Form.Item>
 
         <Form.Item
-          label="Repeat password"
+          label="Повторите пароль"
           name="repeatPassword"
           dependencies={['password']}
           rules={[
@@ -153,15 +147,17 @@ export default function RegisterPage() {
         </Form.Item>
 
         <Form.Item style={{ marginBottom: 0 }}>
-          <Button className={styles.authSubmitButton} type="primary" htmlType="submit" block>
-            Create account
+          <Button type="primary" htmlType="submit" block>
+            Зарегистрироваться
           </Button>
         </Form.Item>
       </Form>
 
-      <Typography.Text className={styles.authFooterText} style={{ color: '#a1a1a1' }}>
-        Already registered? <Link to="/login">Login</Link>
-      </Typography.Text>
+      <Flex justify="center" style={{ width: '100%', marginTop: 'auto' }}>
+        <Typography.Text type="secondary">
+          Уже есть аккаунт? <Link to="/login">Войти</Link>
+        </Typography.Text>
+      </Flex>
     </Flex>
   );
 }

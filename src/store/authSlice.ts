@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { accessTokenManager } from '../auth/accessTokenManager';
+import { tokenManager } from '../auth/accessTokenManager';
 import {
   getApiErrorMessage,
   logoutRequest,
@@ -9,8 +9,6 @@ import {
 } from '../api/auth';
 import { getProfileRequest } from '../api/profile';
 import type { AuthData, Profile, RegistrationFormValues } from '../types/auth';
-
-const REFRESH_TOKEN_STORAGE_KEY = 'refreshToken';
 
 interface AuthState {
   user: Profile | null;
@@ -26,32 +24,20 @@ const initialState: AuthState = {
   authError: null,
 };
 
-function saveRefreshToken(refreshToken: string): void {
-  localStorage.setItem(REFRESH_TOKEN_STORAGE_KEY, refreshToken);
-}
-
-function clearRefreshToken(): void {
-  localStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
-}
-
-function getStoredRefreshToken(): string | null {
-  return localStorage.getItem(REFRESH_TOKEN_STORAGE_KEY);
-}
-
 export const initializeAuth = createAsyncThunk(
   'auth/initialize',
   async (_, { rejectWithValue }) => {
-    const refreshToken = getStoredRefreshToken();
+    const refreshToken = tokenManager.getRefreshToken();
 
     if (!refreshToken) {
-      accessTokenManager.clear();
+      tokenManager.clearAccessToken();
       return null;
     }
 
     try {
       const tokens = await refreshTokenRequest(refreshToken);
-      saveRefreshToken(tokens.refreshToken);
-      accessTokenManager.set(tokens.accessToken);
+      tokenManager.setRefreshToken(tokens.refreshToken);
+      tokenManager.setAccessToken(tokens.accessToken);
 
       const profile = await getProfileRequest(tokens.accessToken);
 
@@ -59,8 +45,7 @@ export const initializeAuth = createAsyncThunk(
         user: profile,
       };
     } catch {
-      accessTokenManager.clear();
-      clearRefreshToken();
+      tokenManager.clearTokens();
 
       return rejectWithValue('Сессия истекла. Выполните вход повторно.');
     }
@@ -72,8 +57,8 @@ export const signIn = createAsyncThunk(
   async (payload: AuthData, { rejectWithValue }) => {
     try {
       const tokens = await signInRequest(payload);
-      saveRefreshToken(tokens.refreshToken);
-      accessTokenManager.set(tokens.accessToken);
+      tokenManager.setRefreshToken(tokens.refreshToken);
+      tokenManager.setAccessToken(tokens.accessToken);
 
       const profile = await getProfileRequest(tokens.accessToken);
 
@@ -81,7 +66,7 @@ export const signIn = createAsyncThunk(
         user: profile,
       };
     } catch (error) {
-      accessTokenManager.clear();
+      tokenManager.clearAccessToken();
 
       return rejectWithValue(
         getApiErrorMessage(error, 'Не удалось выполнить вход.', {
@@ -111,8 +96,7 @@ export const logout = createAsyncThunk('auth/logout', async () => {
   try {
     await logoutRequest();
   } finally {
-    accessTokenManager.clear();
-    clearRefreshToken();
+    tokenManager.clearTokens();
   }
 });
 
@@ -125,8 +109,7 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.authError = null;
       state.isInitializing = false;
-      accessTokenManager.clear();
-      clearRefreshToken();
+      tokenManager.clearTokens();
     },
     clearAuthError(state) {
       state.authError = null;
@@ -171,8 +154,7 @@ const authSlice = createSlice({
         state.authError = null;
       })
       .addCase(signUp.rejected, (state, action) => {
-        state.authError =
-          (action.payload as string) ?? 'Не удалось зарегистрировать пользователя.';
+        state.authError = (action.payload as string) ?? 'Не удалось зарегистрировать пользователя.';
       })
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
